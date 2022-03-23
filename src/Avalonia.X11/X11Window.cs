@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using Avalonia.Controls;
 using Avalonia.Controls.Platform;
+using Avalonia.Storage;
 using Avalonia.Controls.Primitives.PopupPositioning;
 using Avalonia.FreeDesktop;
 using Avalonia.Input;
@@ -1145,6 +1146,7 @@ namespace Avalonia.X11
 
         public bool NeedsManagedDecorations => false;
 
+        public IStorageProvider StorageProvider => throw new NotImplementedException();
 
         public class SurfacePlatformHandle : IPlatformNativeSurfaceHandle
         {
