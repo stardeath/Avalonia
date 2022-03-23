@@ -2,6 +2,7 @@ using System;
 using System.Reactive.Linq;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Platform;
+using Avalonia.Storage;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Input.Raw;
@@ -319,6 +320,9 @@ namespace Avalonia.Controls
         double IRenderRoot.RenderScaling => PlatformImpl?.RenderScaling ?? 1;
 
         IStyleHost IStyleHost.StylingParent => _globalStyles!;
+
+        public IStorageProvider StorageProvider => PlatformImpl?.StorageProvider
+            ?? throw new InvalidOperationException("Platform implementation is not available.");
 
         IRenderTarget IRenderRoot.CreateRenderTarget() => CreateRenderTarget();
 
