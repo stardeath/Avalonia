@@ -192,6 +192,8 @@ namespace Avalonia.X11
                 NativeMenuExporter = DBusMenuExporter.TryCreateTopLevelNativeMenu(_handle);
             NativeControlHost = new X11NativeControlHost(_platform, this);
             InitializeIme();
+
+            StorageProvider = new NativeDialogs.GtkStorageProvider(this);
         }
 
         class SurfaceInfo  : EglGlPlatformSurface.IEglWindowGlPlatformSurfaceInfo
@@ -1147,7 +1149,7 @@ namespace Avalonia.X11
 
         public bool NeedsManagedDecorations => false;
 
-        public IStorageProvider StorageProvider => throw new NotImplementedException();
+        public IStorageProvider StorageProvider { get; }
 
         public class SurfacePlatformHandle : IPlatformNativeSurfaceHandle
         {

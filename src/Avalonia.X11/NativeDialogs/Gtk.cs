@@ -290,5 +290,47 @@ namespace Avalonia.X11.NativeDialogs
             }) {Name = "GTK3THREAD", IsBackground = true}.Start();
             return tcs.Task;
         }
+
+        public static Task<IntPtr> StartGtkPtr()
+        {
+            var tcs = new TaskCompletionSource<IntPtr>();
+            new Thread(() =>
+            {
+                try
+                {
+                    using (var backends = new Utf8Buffer("x11"))
+                        gdk_set_allowed_backends(backends);
+                }
+                catch
+                {
+                    //Ignore
+                }
+
+                Environment.SetEnvironmentVariable("WAYLAND_DISPLAY",
+                    "/proc/fake-display-to-prevent-wayland-initialization-by-gtk3");
+
+                if (!gtk_init_check(0, IntPtr.Zero))
+                {
+                    tcs.SetResult(default);
+                    return;
+                }
+
+                IntPtr app;
+                using (var utf = new Utf8Buffer($"avalonia.app.a{Guid.NewGuid():N}"))
+                    app = gtk_application_new(utf, 0);
+                if (app == IntPtr.Zero)
+                {
+                    tcs.SetResult(default);
+                    return;
+                }
+
+                s_display = gdk_display_get_default();
+                tcs.SetResult(app);
+                while (true)
+                    gtk_main_iteration();
+            })
+            { Name = "GTK3THREAD", IsBackground = true }.Start();
+            return tcs.Task;
+        }
     }
 }
