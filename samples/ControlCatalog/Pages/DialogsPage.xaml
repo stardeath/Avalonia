@@ -4,12 +4,42 @@
   <StackPanel Margin="4"
               Orientation="Vertical"
               Spacing="4">
+
+    <TextBlock Text="Windows:" />
+
+    <Expander Header="Window dialogs">
+      <StackPanel Spacing="4">
+        <Button Name="DecoratedWindow">Decorated _window</Button>
+        <Button Name="DecoratedWindowDialog">Decorated w_indow (dialog)</Button>
+        <Button Name="Dialog">_Dialog</Button>
+        <Button Name="DialogNoTaskbar">Dialog (_No taskbar icon)</Button>
+        <Button Name="OwnedWindow">Own_ed window</Button>
+        <Button Name="OwnedWindowNoTaskbar">Owned window (No tas_kbar icon)</Button>
+      </StackPanel>
+    </Expander>
+
+    <TextBlock Margin="0,20,0,0" Text="Pickers:" />
+
     <CheckBox Name="UseFilters">Use filters</CheckBox>
-    <Button Name="OpenFile">_Open File</Button>
-    <Button Name="OpenMultipleFiles">Open _Multiple File</Button>
-    <Button Name="SaveFile">_Save File</Button>
-    <Button Name="SelectFolder">Select Fo_lder</Button>
-    <Button Name="OpenBoth">Select _Both</Button>
+    <Expander Header="FilePicker API">
+      <StackPanel Spacing="4">
+        <Button Name="OpenFolderPicker">Select Fo_lder</Button>
+        <Button Name="OpenFilePicker">_Open File</Button>
+        <Button Name="OpenMultipleFilesPicker">Open _Multiple File</Button>
+        <Button Name="SaveFilePicker">_Save File</Button>
+        <Button Name="OpenFileFromBookmark">Open File Bookmark</Button>
+        <Button Name="OpenFolderFromBookmark">Open Folder Bookmark</Button>
+      </StackPanel>
+    </Expander>
+    <Expander Header="Legacy OpenFileDialog">
+      <StackPanel Spacing="4">
+        <Button Name="OpenFile">_Open File</Button>
+        <Button Name="OpenMultipleFiles">Open _Multiple File</Button>
+        <Button Name="SaveFile">_Save File</Button>
+        <Button Name="SelectFolder">Select Fo_lder</Button>
+        <Button Name="OpenBoth">Select _Both</Button>
+      </StackPanel>
+    </Expander>
 
     <TextBlock x:Name="PickerLastResultsVisible"
                Classes="h2"
@@ -17,23 +47,10 @@
                Text="Last picker results:" />
     <ItemsPresenter x:Name="PickerLastResults" />
 
-    <TextBlock Margin="0,8,0,0"
-               Classes="h1"
-               Text="FilePicker API" />
-    <Button Name="OpenFilePicker">_Open File</Button>
-    <Button Name="OpenMultipleFilesPicker">Open _Multiple File</Button>
-    <Button Name="SaveFilePicker">_Save File</Button>
-    <TextBox Name="OpenedFileContent" Watermark="Picked file content" />
-
-    <TextBlock Margin="0,8,0,0"
-               Classes="h1"
-               Text="Window dialogs" />
-    <Button Name="DecoratedWindow">Decorated _window</Button>
-    <Button Name="DecoratedWindowDialog">Decorated w_indow (dialog)</Button>
-    <Button Name="Dialog">_Dialog</Button>
-    <Button Name="DialogNoTaskbar">Dialog (_No taskbar icon)</Button>
-    <Button Name="OwnedWindow">Own_ed window</Button>
-    <Button Name="OwnedWindowNoTaskbar">Owned window (No tas_kbar icon)</Button>
+    <TextBox Name="BookmarkContainer" Watermark="Bookmark" />
+    <TextBox Name="OpenedFileContent"
+             MaxLines="10"
+             Watermark="Picked file content" />
 
   </StackPanel>
 </UserControl>

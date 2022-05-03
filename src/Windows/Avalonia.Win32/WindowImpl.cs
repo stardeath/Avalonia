@@ -151,6 +151,7 @@ namespace Avalonia.Win32
             }
 
             Screen = new ScreenImpl();
+            StorageProvider = new Win32StorageProvider(this);
 
             _nativeControlHost = new Win32NativeControlHost(this, _isUsingComposition);
             s_instances.Add(this);
@@ -1384,8 +1385,8 @@ namespace Avalonia.Win32
 
         public ITextInputMethodImpl TextInputMethod => Imm32InputMethod.Current;
 
-        public IStorageProvider StorageProvider => throw new NotImplementedException();
-        
+        public IStorageProvider StorageProvider { get; }
+
         private class WindowImplPlatformHandle : IPlatformNativeSurfaceHandle
         {
             private readonly WindowImpl _owner;

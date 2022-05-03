@@ -14,12 +14,6 @@ namespace Avalonia.Controls.Platform
     [Obsolete]
     internal class SystemDialogImpl : ISystemDialogImpl
     {
-        /// <summary>
-        /// Shows a file dialog.
-        /// </summary>
-        /// <param name="dialog">The details of the file dialog to show.</param>
-        /// <param name="parent">The parent window.</param>
-        /// <returns>A task returning the selected filenames.</returns>
         public async Task<string[]?> ShowFileDialogAsync(FileDialog dialog, Window parent)
         {
             var types = dialog.Filters.Select(f => new FilePickerFileType(f.Name!) { Extensions = f.Extensions }).ToArray();
@@ -34,7 +28,11 @@ namespace Avalonia.Controls.Platform
                 var options = new FilePickerOpenOptions
                 {
                     AllowMultiple = openDialog.AllowMultiple,
-                    FileTypes = types
+                    FileTypeFilter = types,
+                    Title = dialog.Title,
+                    SuggestedStartLocation = openDialog.InitialDirectory is { } directory
+                        ? new Storage.FileIO.BclStorageFolder(new System.IO.DirectoryInfo(directory))
+                        : null
                 };
 
                 var files = await filePicker.OpenFilePickerAsync(options);
@@ -54,8 +52,12 @@ namespace Avalonia.Controls.Platform
 
                 var options = new FilePickerSaveOptions
                 {
-                    DefaultFileName = saveDialog.InitialFileName,
-                    FileTypes = types
+                    SuggestedFileName = saveDialog.InitialFileName,
+                    FileTypeChoices = types,
+                    Title = dialog.Title,
+                    SuggestedStartLocation = saveDialog.InitialDirectory is { } directory
+                        ? new Storage.FileIO.BclStorageFolder(new System.IO.DirectoryInfo(directory))
+                        : null
                 };
 
                 var file = await filePicker.SaveFilePickerAsync(options);
@@ -72,9 +74,24 @@ namespace Avalonia.Controls.Platform
             return null;
         }
 
-        public Task<string?> ShowFolderDialogAsync(OpenFolderDialog dialog, Window parent)
+        public async Task<string?> ShowFolderDialogAsync(OpenFolderDialog dialog, Window parent)
         {
-            return Task.FromResult((string?)null);
+            var filePicker = parent.StorageProvider;
+            if (!filePicker.CanPickFolder)
+            {
+                return null;
+            }
+
+            var options = new FolderPickerOpenOptions
+            {
+                Title = dialog.Title,
+                SuggestedStartLocation = dialog.InitialDirectory is { } directory
+                    ? new Storage.FileIO.BclStorageFolder(new System.IO.DirectoryInfo(directory))
+                    : null
+            };
+
+            var folder = await filePicker.OpenFolderPickerAsync(options);
+            return folder is not null && folder.TryGetFullPath(out var fullPath) ? fullPath : null;
         }
     }
 }

@@ -26,9 +26,11 @@ namespace Avalonia.iOS.Storage
 
         public bool CanSave => true;
 
+        public bool CanPickFolder => true;
+
         public async Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options)
         {
-            var allowedUtis = options.FileTypes?.SelectMany(f => f.AppleUniformTypeIdentifiers ?? Array.Empty<string>())
+            var allowedUtis = options.FileTypeFilter?.SelectMany(f => f.AppleUniformTypeIdentifiers ?? Array.Empty<string>())
                 .ToArray() ?? new string[]
             {
                 UTType.Content,
@@ -40,7 +42,10 @@ namespace Avalonia.iOS.Storage
 
             // Use Open instead of Import so that we can attempt to use the original file.
             // If the file is from an external provider, then it will be downloaded.
-            using var documentPicker = new UIDocumentPickerViewController(allowedUtis, UIDocumentPickerMode.Open);
+            using var documentPicker = new UIDocumentPickerViewController(allowedUtis, UIDocumentPickerMode.Open)
+            {
+                DirectoryUrl = GetUrlFromFolder(options.SuggestedStartLocation)
+            };
 
 #if NET6_0_OR_GREATER
             if (OperatingSystem.IsIOSVersionAtLeast(11, 0))
@@ -65,6 +70,18 @@ namespace Avalonia.iOS.Storage
             return Task.FromResult<IStorageBookmarkFile?>(new IOSStorageFile(url));
         }
 
+        public Task<IStorageBookmarkFolder?> OpenFolderBookmarkAsync(string bookmark)
+        {
+            var url = NSUrl.FromBookmarkData(new NSData(bookmark, NSDataBase64DecodingOptions.None),
+                NSUrlBookmarkResolutionOptions.WithoutUI, null, out var isStale, out var error);
+            if (error != null)
+            {
+                throw new NSErrorException(error);
+            }
+
+            return Task.FromResult<IStorageBookmarkFolder?>(new IOSStorageFolder(url));
+        }
+
         public async Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options)
         {
             string? fileName;
@@ -73,7 +90,7 @@ namespace Avalonia.iOS.Storage
             using var alert = UIAlertController.Create(options.Title, null, UIAlertControllerStyle.Alert);
             {
                 var alertTcs = new TaskCompletionSource<string?>();
-                alert.AddTextField(f => f.Text = options.DefaultFileName);
+                alert.AddTextField(f => f.Text = options.SuggestedFileName);
                 alert.AddAction(UIAlertAction.Create("OK", UIAlertActionStyle.Default, (action) => alertTcs.TrySetResult(alert.TextFields[0].Text)));
                 alert.AddAction(UIAlertAction.Create("Cancel", UIAlertActionStyle.Cancel, (action) => alertTcs.TrySetResult(null)));
                 _uiViewController.PresentViewController(alert, true, null);
@@ -87,7 +104,10 @@ namespace Avalonia.iOS.Storage
             }
 
 
-            using (var documentPicker = new UIDocumentPickerViewController(new string[] { UTType.Folder }, UIDocumentPickerMode.Open))
+            using (var documentPicker = new UIDocumentPickerViewController(new string[] { UTType.Folder }, UIDocumentPickerMode.Open)
+            {
+                DirectoryUrl = GetUrlFromFolder(options.SuggestedStartLocation)
+            })
             {
                 var urls = await ShowPicker(documentPicker);
                 folderUrl = urls.FirstOrDefault();
@@ -114,6 +134,33 @@ namespace Avalonia.iOS.Storage
             }
         }
 
+        public async Task<IStorageFolder?> OpenFolderPickerAsync(FolderPickerOpenOptions options)
+        {
+            NSUrl? folderUrl;
+            using (var documentPicker = new UIDocumentPickerViewController(new string[] { UTType.Folder }, UIDocumentPickerMode.Open)
+            {
+                DirectoryUrl = GetUrlFromFolder(options.SuggestedStartLocation)
+            })
+            {
+                var urls = await ShowPicker(documentPicker);
+                folderUrl = urls.FirstOrDefault();
+            }
+
+            if (folderUrl is null)
+            {
+                return null;
+            }
+
+            return new IOSStorageFolder(folderUrl);
+        }
+
+        private static NSUrl? GetUrlFromFolder(IStorageFolder folder)
+        {
+            return folder is IOSStorageFolder iosFolder
+                ? iosFolder.Url
+                : folder.TryGetFullPath(out var fullPath) ? new NSUrl(fullPath) : null;
+        }
+
         private Task<NSUrl[]> ShowPicker(UIDocumentPickerViewController documentPicker)
         {
             var tcs = new TaskCompletionSource<NSUrl[]>();
@@ -132,7 +179,7 @@ namespace Avalonia.iOS.Storage
             return tcs.Task;
         }
 
-        class PickerDelegate : UIDocumentPickerDelegate
+        private class PickerDelegate : UIDocumentPickerDelegate
         {
             public Action<NSUrl[]>? PickHandler { get; set; }
 
@@ -146,7 +193,7 @@ namespace Avalonia.iOS.Storage
                 => PickHandler?.Invoke(new NSUrl[] { url });
         }
 
-        class AlertDelegate : UIAlertViewDelegate
+        private class AlertDelegate : UIAlertViewDelegate
         {
             public Action<string?>? Input { get; set; }
             public override void Canceled(UIAlertView alertView) => Input?.Invoke(null);
@@ -154,7 +201,7 @@ namespace Avalonia.iOS.Storage
         }
 
 
-        internal class UIPresentationControllerDelegate : UIAdaptivePresentationControllerDelegate
+        private class UIPresentationControllerDelegate : UIAdaptivePresentationControllerDelegate
         {
             private Action? dismissHandler;
 

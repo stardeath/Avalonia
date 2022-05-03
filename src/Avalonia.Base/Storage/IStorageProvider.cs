@@ -12,10 +12,11 @@ namespace Avalonia.Storage
         bool CanSave { get; }
         Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options);
 
-        // bool CanPickDirectory { get; }
-        // Task<IStorageDirectory> OpenDirectoryPickerAsync()
+        bool CanPickFolder { get; }
+        Task<IStorageFolder?> OpenFolderPickerAsync(FolderPickerOpenOptions options);
+        
         Task<IStorageBookmarkFile?> OpenFileBookmarkAsync(string bookmark);
 
-        // Task<IStorageBookmarkDirectory?> OpenDirectoryBookmarkAsync(string bookmark);
+        Task<IStorageBookmarkFolder?> OpenFolderBookmarkAsync(string bookmark);
     }
 }

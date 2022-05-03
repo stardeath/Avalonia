@@ -23,5 +23,7 @@ namespace Avalonia.Storage
 
         bool CanBookmark { get; }
         Task<string?> SaveBookmark();
+
+        Task<IStorageFolder?> GetParentAsync();
     }
 }

@@ -61,7 +61,7 @@ namespace Avalonia.Android.Storage
         public Task<Stream> OpenWrite() => Task.FromResult(OpenContentStream(_context, _uri, true)
             ?? throw new InvalidOperationException("Failed to open content stream"));
 
-        Task IStorageBookmarkFile.Release()
+        Task IStorageBookmarkItem.Release()
         {
             _context.ContentResolver?.ReleasePersistableUriPermission(_uri, ActivityFlags.GrantWriteUriPermission | ActivityFlags.GrantReadUriPermission);
             return Task.CompletedTask;
@@ -103,7 +103,7 @@ namespace Avalonia.Android.Storage
                         size = (ulong)cursor.GetLong(columnIndex);
                     }
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.TryGet(LogEventLevel.Verbose, LogArea.AndroidPlatform)?
                         .Log(this, "File Size metadata reader failed: '{Exception}'", ex);
@@ -116,7 +116,7 @@ namespace Avalonia.Android.Storage
                         itemDate = DateTimeOffset.FromUnixTimeMilliseconds(cursor.GetLong(columnIndex));
                     }
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.TryGet(LogEventLevel.Verbose, LogArea.AndroidPlatform)?
                         .Log(this, "File DateAdded metadata reader failed: '{Exception}'", ex);
@@ -129,7 +129,7 @@ namespace Avalonia.Android.Storage
                         dateModified = DateTimeOffset.FromUnixTimeMilliseconds(cursor.GetLong(columnIndex));
                     }
                 }
-                catch (Exception ex)
+                catch (System.Exception ex)
                 {
                     Logger.TryGet(LogEventLevel.Verbose, LogArea.AndroidPlatform)?
                         .Log(this, "File DateAdded metadata reader failed: '{Exception}'", ex);
@@ -146,7 +146,7 @@ namespace Avalonia.Android.Storage
 
         public Task<bool> RequestPermissions()
         {
-            return Task.FromResult(false);
+            return Task.FromResult(true);
         }
 
         internal string? EnsurePhysicalPath(Context context, AndroidUri uri, bool requireExtendedAccess = true)
@@ -352,7 +352,7 @@ namespace Avalonia.Android.Storage
                 if (!string.IsNullOrEmpty(value))
                     return value;
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Logger.TryGet(LogEventLevel.Verbose, LogArea.AndroidPlatform)?.Log(this, "File metadata reader failed: '{Exception}'", ex);
             }
@@ -385,6 +385,11 @@ namespace Avalonia.Android.Storage
             }
 
             return text;
+        }
+
+        public Task<IStorageFolder?> GetParentAsync()
+        {
+            throw new NotImplementedException();
         }
     }
 }

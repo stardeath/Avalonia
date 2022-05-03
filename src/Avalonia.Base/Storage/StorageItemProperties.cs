@@ -5,10 +5,10 @@ namespace Avalonia.Storage
 {
     public class StorageItemProperties
     {
-        public ulong? Size { get; init; }
+        public ulong? Size { get; set; }
 
-        public DateTimeOffset? ItemDate { get; init; }
+        public DateTimeOffset? ItemDate { get; set; }
 
-        public DateTimeOffset? DateModified { get; init; }
+        public DateTimeOffset? DateModified { get; set; }
     }
 }

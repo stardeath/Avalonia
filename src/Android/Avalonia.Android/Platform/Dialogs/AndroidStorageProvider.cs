@@ -29,6 +29,18 @@ namespace Avalonia.Android.Storage
 
         public bool CanSave => true;
 
+        public bool CanPickFolder => false;
+
+        public Task<IStorageBookmarkFolder?> OpenFolderBookmarkAsync(string bookmark)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IStorageFolder?> OpenFolderPickerAsync(FolderPickerOpenOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<IStorageBookmarkFile?> OpenFileBookmarkAsync(string bookmark)
         {
             var uri = AndroidUri.Parse(bookmark) ?? throw new ArgumentException("Couldn't parse Bookmark value", nameof(bookmark));
@@ -41,7 +53,7 @@ namespace Avalonia.Android.Storage
 
             try
             {
-                var mimeTypes = options.FileTypes?.Where(t => t != FilePickerFileTypes.All)
+                var mimeTypes = options.FileTypeFilter?.Where(t => t != FilePickerFileTypes.All)
                     .SelectMany(f => f.MimeTypes).Distinct().ToArray() ?? Array.Empty<string>();
 
                 var intent = new Intent(Intent.ActionOpenDocument)
@@ -107,7 +119,7 @@ namespace Avalonia.Android.Storage
         {
             try
             {
-                var mimeTypes = options.FileTypes?.Where(t => t != FilePickerFileTypes.All)
+                var mimeTypes = options.FileTypeChoices?.Where(t => t != FilePickerFileTypes.All)
                     .SelectMany(f => f.MimeTypes).Distinct().ToArray() ?? Array.Empty<string>();
 
                 var intent = new Intent(Intent.ActionCreateDocument)

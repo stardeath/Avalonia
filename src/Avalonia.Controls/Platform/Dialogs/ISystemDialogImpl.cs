@@ -6,7 +6,7 @@ namespace Avalonia.Controls.Platform
     /// <summary>
     /// Defines a platform-specific system dialog implementation.
     /// </summary>
-    [Obsolete("Use Window.FilePicker API or TopLevel.FilePicker API")]
+    [Obsolete("Use Window.StorageProvider API or TopLevel.StorageProvider API")]
     public interface ISystemDialogImpl
     {
         /// <summary>

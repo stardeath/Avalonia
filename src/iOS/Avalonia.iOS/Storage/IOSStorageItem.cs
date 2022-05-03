@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 using Avalonia.Storage;
@@ -16,12 +13,12 @@ using UIKit;
 
 namespace Avalonia.iOS.Storage
 {
-    internal class IOSStorageFile : IStorageFile, IStorageBookmarkFile
+    internal class IOSStorageItem : IStorageBookmarkItem
     {
         private readonly NSUrl _url;
         private readonly string _filePath;
 
-        public IOSStorageFile(NSUrl url)
+        public IOSStorageItem(NSUrl url)
         {
             _url = url;
 
@@ -32,13 +29,11 @@ namespace Avalonia.iOS.Storage
             }
         }
 
-        public bool CanOpenRead => true;
-
-        public bool CanOpenWrite => true;
-
-        public string Name { get; }
+        internal NSUrl Url => _url;
 
         public bool CanBookmark => true;
+
+        public string Name { get; }
 
         public Task<StorageItemProperties> GetBasicPropertiesAsync()
         {
@@ -51,14 +46,9 @@ namespace Avalonia.iOS.Storage
             });
         }
 
-        public Task<Stream> OpenRead()
+        public Task<IStorageFolder?> GetParentAsync()
         {
-            return Task.FromResult<Stream>(new IOSSecurityScopedStream(_url, FileAccess.Read));
-        }
-
-        public Task<Stream> OpenWrite()
-        {
-            return Task.FromResult<Stream>(new IOSSecurityScopedStream(_url, FileAccess.Write));
+            return Task.FromResult<IStorageFolder?>(new IOSStorageFolder(_url.RemoveLastPathComponent()));
         }
 
         public Task Release()
@@ -69,7 +59,7 @@ namespace Avalonia.iOS.Storage
 
         public Task<bool> RequestPermissions()
         {
-            throw new NotImplementedException();
+            return Task.FromResult(true);
         }
 
         public Task<string?> SaveBookmark()
@@ -97,6 +87,34 @@ namespace Avalonia.iOS.Storage
         {
             path = _filePath;
             return true;
+        }
+    }
+
+    internal class IOSStorageFile : IOSStorageItem, IStorageBookmarkFile
+    {
+        public IOSStorageFile(NSUrl url) : base(url)
+        {
+        }
+
+        public bool CanOpenRead => true;
+
+        public bool CanOpenWrite => true;
+
+        public Task<Stream> OpenRead()
+        {
+            return Task.FromResult<Stream>(new IOSSecurityScopedStream(Url, FileAccess.Read));
+        }
+
+        public Task<Stream> OpenWrite()
+        {
+            return Task.FromResult<Stream>(new IOSSecurityScopedStream(Url, FileAccess.Write));
+        }
+    }
+
+    internal class IOSStorageFolder : IOSStorageItem, IStorageBookmarkFolder
+    {
+        public IOSStorageFolder(NSUrl url) : base(url)
+        {
         }
     }
 }

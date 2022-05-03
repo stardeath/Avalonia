@@ -12,10 +12,10 @@ namespace Avalonia.Storage
 
         public string Name { get; }
 
-        public IReadOnlyList<string>? Extensions { get; init; }
+        public IReadOnlyList<string>? Extensions { get; set; }
         // For web
-        public IReadOnlyList<string>? MimeTypes { get; init; }
+        public IReadOnlyList<string>? MimeTypes { get; set; }
         // For Apple platforms
-        public IReadOnlyList<string>? AppleUniformTypeIdentifiers { get; init; }
+        public IReadOnlyList<string>? AppleUniformTypeIdentifiers { get; set; }
     }
 }
