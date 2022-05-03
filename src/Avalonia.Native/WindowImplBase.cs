@@ -74,6 +74,7 @@ namespace Avalonia.Native
             _keyboard = AvaloniaLocator.Current.GetService<IKeyboardDevice>();
             _mouse = new MouseDevice();
             _cursorFactory = AvaloniaLocator.Current.GetService<ICursorFactory>();
+            StorageProvider = new MacOSStorageProvider(this, _factory.CreateSystemDialogs());
         }
 
         protected void Init(IAvnWindowBase window, IAvnScreens screens, IGlContext glContext)
@@ -85,6 +86,7 @@ namespace Avalonia.Native
             if (_gpu)
                 _glSurface = new GlPlatformSurface(window, _glContext);
             Screen = new ScreenImpl(screens);
+
             _savedLogicalSize = ClientSize;
             _savedScaling = RenderScaling;
             _nativeControlHost = new NativeControlHostImpl(_native.CreateNativeControlHost());
@@ -512,6 +514,6 @@ namespace Avalonia.Native
 
         public IPlatformHandle Handle { get; private set; }
 
-        public IStorageProvider StorageProvider => throw new NotImplementedException();
+        public IStorageProvider StorageProvider { get; }
     }
 }

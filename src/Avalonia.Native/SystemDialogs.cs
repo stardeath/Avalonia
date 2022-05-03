@@ -1,70 +1,109 @@
-﻿using System;
+﻿#nullable enable
+
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Avalonia.Controls;
-using Avalonia.Controls.Platform;
 using Avalonia.Native.Interop;
+using Avalonia.Storage;
+using Avalonia.Storage.FileIO;
 
 namespace Avalonia.Native
 {
-    internal class SystemDialogs : ISystemDialogImpl
+    internal class MacOSStorageProvider : IStorageProvider
     {
-        IAvnSystemDialogs _native;
+        private readonly WindowBaseImpl _window;
+        private readonly IAvnSystemDialogs _native;
 
-        public SystemDialogs(IAvnSystemDialogs native)
+        public MacOSStorageProvider(WindowBaseImpl window, IAvnSystemDialogs native)
         {
+            _window = window;
             _native = native;
         }
 
-        public Task<string[]> ShowFileDialogAsync(FileDialog dialog, Window parent)
+        public bool CanOpen => true;
+
+        public bool CanSave => true;
+
+        public bool CanPickFolder => true;
+
+        public Task<IStorageBookmarkFile?> OpenFileBookmarkAsync(string bookmark)
         {
-            var events = new SystemDialogEvents();
-
-            var nativeParent = GetNativeWindow(parent);
-
-            if (dialog is OpenFileDialog ofd)
-            {
-                _native.OpenFileDialog(nativeParent,
-                                        events, ofd.AllowMultiple.AsComBool(),
-                                        ofd.Title ?? "",
-                                        ofd.Directory ?? "",
-                                        ofd.InitialFileName ?? "",
-                                        string.Join(";", dialog.Filters.SelectMany(f => f.Extensions)));
-            }
-            else
-            {
-                _native.SaveFileDialog(nativeParent,
-                                        events,
-                                        dialog.Title ?? "",
-                                        dialog.Directory ?? "",
-                                        dialog.InitialFileName ?? "",
-                                        string.Join(";", dialog.Filters.SelectMany(f => f.Extensions)));
-            }
-
-            return events.Task.ContinueWith(t => { events.Dispose(); return t.Result; });
+            var file = new FileInfo(bookmark);
+            return file.Exists
+                ? Task.FromResult<IStorageBookmarkFile?>(new BclStorageFile(file))
+                : Task.FromResult<IStorageBookmarkFile?>(null);
         }
 
-        public Task<string> ShowFolderDialogAsync(OpenFolderDialog dialog, Window parent)
+        public Task<IStorageBookmarkFolder?> OpenFolderBookmarkAsync(string bookmark)
         {
-            var events = new SystemDialogEvents();
-
-            var nativeParent = GetNativeWindow(parent);
-
-            _native.SelectFolderDialog(nativeParent, events, dialog.Title ?? "", dialog.Directory ?? "");
-
-            return events.Task.ContinueWith(t => { events.Dispose(); return t.Result.FirstOrDefault(); });
+            var folder = new DirectoryInfo(bookmark);
+            return folder.Exists
+                ? Task.FromResult<IStorageBookmarkFolder?>(new BclStorageFolder(folder))
+                : Task.FromResult<IStorageBookmarkFolder?>(null);
         }
 
-        private IAvnWindow GetNativeWindow(Window window)
+        public async Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options)
         {
-            return (window?.PlatformImpl as WindowImpl)?.Native;
+            using var events = new SystemDialogEvents();
+
+            var suggestedDirectory = options.SuggestedStartLocation?.TryGetFullPath(out var suggestedDirectoryTmp) == true
+                ? suggestedDirectoryTmp : string.Empty;
+
+            _native.OpenFileDialog((IAvnWindow)_window.Native,
+                                    events,
+                                    options.AllowMultiple.AsComBool(),
+                                    options.Title ?? string.Empty,
+                                    suggestedDirectory,
+                                    string.Empty,
+                                    string.Join(";", options.FileTypeFilter?.SelectMany(f => f.Extensions ?? Array.Empty<string>()) ?? Array.Empty<string>()));
+
+            var result = await events.Task.ConfigureAwait(false);
+
+            return result?.Select(f => new BclStorageFile(new FileInfo(f))).ToArray() ?? Array.Empty<IStorageFile>();
+        }
+
+        public async Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options)
+        {
+            using var events = new SystemDialogEvents();
+
+            var suggestedDirectory = options.SuggestedStartLocation?.TryGetFullPath(out var suggestedDirectoryTmp) == true
+                ? suggestedDirectoryTmp : string.Empty;
+
+            _native.SaveFileDialog((IAvnWindow)_window.Native,
+                        events,
+                        options.Title ?? string.Empty,
+                        suggestedDirectory,
+                        options.SuggestedFileName ?? string.Empty,
+                        string.Join(";", options.FileTypeChoices?.SelectMany(f => f.Extensions ?? Array.Empty<string>()) ?? Array.Empty<string>()));
+
+            var result = await events.Task.ConfigureAwait(false);
+            return result.FirstOrDefault() is string file
+                ? new BclStorageFile(new FileInfo(file))
+                : null;
+        }
+
+        public async Task<IStorageFolder?> OpenFolderPickerAsync(FolderPickerOpenOptions options)
+        {
+            using var events = new SystemDialogEvents();
+
+            var suggestedDirectory = options.SuggestedStartLocation?.TryGetFullPath(out var suggestedDirectoryTmp) == true
+                ? suggestedDirectoryTmp : string.Empty;
+
+            _native.SelectFolderDialog((IAvnWindow)_window.Native, events, options.Title ?? "", suggestedDirectory);
+
+            var result = await events.Task.ConfigureAwait(false);
+            return result.FirstOrDefault() is string folder
+                ? new BclStorageFolder(new DirectoryInfo(folder))
+                : null;
         }
     }
 
     internal unsafe class SystemDialogEvents : NativeCallbackBase, IAvnSystemDialogEvents
     {
-        private TaskCompletionSource<string[]> _tcs;
+        private readonly TaskCompletionSource<string[]> _tcs;
 
         public SystemDialogEvents()
         {
@@ -83,7 +122,7 @@ namespace Avalonia.Native
 
                 for (int i = 0; i < numResults; i++)
                 {
-                    results[i] = Marshal.PtrToStringAnsi(*ptr);
+                    results[i] = Marshal.PtrToStringAnsi(*ptr) ?? string.Empty;
 
                     ptr++;
                 }
