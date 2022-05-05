@@ -7,8 +7,8 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Avalonia.Native.Interop;
-using Avalonia.Storage;
-using Avalonia.Storage.FileIO;
+using Avalonia.Platform.Storage;
+using Avalonia.Platform.Storage.FileIO;
 
 namespace Avalonia.Native
 {

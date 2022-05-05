@@ -12,7 +12,7 @@ using Avalonia.Input.Platform;
 using Avalonia.Input.Raw;
 using Avalonia.Platform;
 using Avalonia.Rendering;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 
 namespace Avalonia.DesignerSupport.Remote
 {
@@ -223,15 +223,6 @@ namespace Avalonia.DesignerSupport.Remote
         public IWindowIconImpl LoadIcon(Stream stream) => new IconStub();
 
         public IWindowIconImpl LoadIcon(IBitmapImpl bitmap) => new IconStub();
-    }
-
-    class SystemDialogsStub : ISystemDialogImpl
-    {
-        public Task<string[]> ShowFileDialogAsync(FileDialog dialog, Window parent) =>
-            Task.FromResult((string[])null);
-
-        public Task<string> ShowFolderDialogAsync(OpenFolderDialog dialog, Window parent) =>
-            Task.FromResult((string)null);
     }
 
     class ScreenStub : IScreenImpl

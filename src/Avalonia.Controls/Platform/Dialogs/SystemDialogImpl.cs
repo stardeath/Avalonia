@@ -2,7 +2,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
+using Avalonia.Platform.Storage.FileIO;
 
 #nullable enable
 
@@ -19,6 +20,7 @@ namespace Avalonia.Controls.Platform
             var types = dialog.Filters.Select(f => new FilePickerFileType(f.Name!) { Extensions = f.Extensions }).ToArray();
             if (dialog is OpenFileDialog openDialog)
             {
+                Application.Current.Clipboard
                 var filePicker = parent.StorageProvider;
                 if (!filePicker.CanOpen)
                 {
@@ -31,11 +33,11 @@ namespace Avalonia.Controls.Platform
                     FileTypeFilter = types,
                     Title = dialog.Title,
                     SuggestedStartLocation = openDialog.InitialDirectory is { } directory
-                        ? new Storage.FileIO.BclStorageFolder(new System.IO.DirectoryInfo(directory))
+                        ? new BclStorageFolder(new System.IO.DirectoryInfo(directory))
                         : null
                 };
 
-                var files = await filePicker.OpenFilePickerAsync(options);
+                var files = await filePicker.OpenFilePickerAsync(parent, options);
                 return files
                     .Select(file => file.TryGetFullPath(out var fullPath)
                         ? fullPath

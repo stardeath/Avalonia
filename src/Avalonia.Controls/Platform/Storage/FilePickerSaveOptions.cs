@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System.Collections.Generic;
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public class FilePickerSaveOptions
     {

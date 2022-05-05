@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Avalonia.Controls;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 using Avalonia.Controls.Presenters;
 using Avalonia.Dialogs;
 using Avalonia.Layout;
@@ -98,7 +98,7 @@ namespace ControlCatalog.Pages
                     Title = "Select folder",
                     Directory = lastSelectedDirectory?.TryGetFullPath(out var path) == true ? path : null
                 }.ShowAsync(GetWindow());
-                lastSelectedDirectory = new Avalonia.Storage.FileIO.BclStorageFolder(new System.IO.DirectoryInfo(result));
+                lastSelectedDirectory = new Avalonia.Platform.Storage.FileIO.BclStorageFolder(new System.IO.DirectoryInfo(result));
                 results.Items = new [] { result };
                 resultsVisible.IsVisible = result != null;
             };

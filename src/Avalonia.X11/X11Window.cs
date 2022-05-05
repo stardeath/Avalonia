@@ -22,7 +22,7 @@ using Avalonia.Rendering;
 using Avalonia.Threading;
 using Avalonia.X11.Glx;
 using static Avalonia.X11.XLib;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 // ReSharper disable IdentifierTypo
 // ReSharper disable StringLiteralTypo
 namespace Avalonia.X11

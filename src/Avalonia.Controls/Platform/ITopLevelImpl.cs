@@ -5,7 +5,7 @@ using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Layout;
 using Avalonia.Rendering;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 
 using JetBrains.Annotations;
 

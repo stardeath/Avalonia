@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public class FolderPickerOpenOptions
     {

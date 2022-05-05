@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 
 using Foundation;
 

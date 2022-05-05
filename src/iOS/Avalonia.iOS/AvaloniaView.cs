@@ -9,7 +9,7 @@ using Avalonia.Input.TextInput;
 using Avalonia.iOS.Storage;
 using Avalonia.Platform;
 using Avalonia.Rendering;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 using CoreAnimation;
 using Foundation;
 using ObjCRuntime;
@@ -43,6 +43,7 @@ namespace Avalonia.iOS
             );
             _topLevelImpl.Surfaces = new[] {new EaglLayerSurface(l)};
             MultipleTouchEnabled = true;
+            AddSubviews(new UIView[] { new UIKit.UIButton(UIButtonType.InfoDark) });
         }
 
         internal class TopLevelImpl : ITopLevelImplWithTextInputMethod

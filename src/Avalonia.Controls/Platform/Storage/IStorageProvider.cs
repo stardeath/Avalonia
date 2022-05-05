@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Avalonia.Storage
+using Avalonia.Controls;
+
+namespace Avalonia.Platform.Storage
 {
     public interface IStorageProvider
     {
         bool CanOpen { get; }
-        Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(FilePickerOpenOptions options);
+        Task<IReadOnlyList<IStorageFile>> OpenFilePickerAsync(TopLevel topLevel, FilePickerOpenOptions options);
 
         bool CanSave { get; }
-        Task<IStorageFile?> SaveFilePickerAsync(FilePickerSaveOptions options);
+        Task<IStorageFile?> SaveFilePickerAsync(TopLevel topLevel, FilePickerSaveOptions options);
 
         bool CanPickFolder { get; }
-        Task<IStorageFolder?> OpenFolderPickerAsync(FolderPickerOpenOptions options);
+        Task<IStorageFolder?> OpenFolderPickerAsync(TopLevel topLevel, FolderPickerOpenOptions options);
         
         Task<IStorageBookmarkFile?> OpenFileBookmarkAsync(string bookmark);
 

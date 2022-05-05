@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System.Threading.Tasks;
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public interface IStorageBookmarkItem : IStorageItem
     {

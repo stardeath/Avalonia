@@ -2,7 +2,7 @@ using System;
 using System.Reactive.Linq;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Platform;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Input.Raw;

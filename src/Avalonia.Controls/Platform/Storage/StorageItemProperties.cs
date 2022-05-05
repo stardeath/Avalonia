@@ -1,7 +1,7 @@
 ﻿#nullable enable
 using System;
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public class StorageItemProperties
     {

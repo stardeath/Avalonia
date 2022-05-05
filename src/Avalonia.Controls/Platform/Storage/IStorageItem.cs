@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public interface IStorageItem
     {

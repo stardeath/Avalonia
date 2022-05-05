@@ -9,7 +9,7 @@ using Android.Content;
 using Android.OS;
 using Android.Provider;
 
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 using Avalonia.Logging;
 
 using AndroidUri = Android.Net.Uri;

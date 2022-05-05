@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Avalonia.Controls;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls.Platform;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Input.TextInput;

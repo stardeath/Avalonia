@@ -12,7 +12,7 @@ using Avalonia.Platform;
 using Avalonia.Rendering;
 using Avalonia.Threading;
 using Avalonia.Utilities;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 
 namespace Avalonia.Headless
 {

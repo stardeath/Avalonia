@@ -1,6 +1,6 @@
 ﻿#nullable enable
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public interface IStorageFolder : IStorageItem
     {

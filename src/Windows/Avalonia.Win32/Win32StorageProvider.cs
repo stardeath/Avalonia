@@ -8,8 +8,8 @@ using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
-using Avalonia.Storage;
-using Avalonia.Storage.FileIO;
+using Avalonia.Platform.Storage;
+using Avalonia.Platform.Storage.FileIO;
 using Avalonia.Controls;
 using Avalonia.MicroCom;
 using Avalonia.Win32.Interop;

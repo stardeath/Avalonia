@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
     public interface IStorageFile : IStorageItem
     {

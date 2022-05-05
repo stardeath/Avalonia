@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace Avalonia.Storage.FileIO
+namespace Avalonia.Platform.Storage.FileIO
 {
     public class BclStorageFolder : IStorageBookmarkFolder
     {
@@ -41,17 +41,17 @@ namespace Avalonia.Storage.FileIO
             return Task.FromResult<IStorageFolder?>(null);
         }
 
-        public Task Release()
+        public virtual Task Release()
         {
             return Task.CompletedTask;
         }
 
-        public Task<bool> RequestPermissions()
+        public virtual Task<bool> RequestPermissions()
         {
             return Task.FromResult(true);
         }
 
-        public Task<string?> SaveBookmark()
+        public virtual Task<string?> SaveBookmark()
         {
             return Task.FromResult<string?>(_directoryInfo.FullName);
         }

@@ -5,7 +5,7 @@ using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Platform;
 using Avalonia.Rendering;
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 
 namespace Avalonia.Controls.Embedding.Offscreen
 {

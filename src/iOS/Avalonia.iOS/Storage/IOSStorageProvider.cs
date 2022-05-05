@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
-using Avalonia.Storage;
+using Avalonia.Platform.Storage;
 
 using UIKit;
 using MobileCoreServices;

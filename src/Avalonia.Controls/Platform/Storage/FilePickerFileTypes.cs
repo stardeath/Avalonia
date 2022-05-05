@@ -1,6 +1,9 @@
 ﻿#nullable enable
-namespace Avalonia.Storage
+namespace Avalonia.Platform.Storage
 {
+    /// <summary>
+    /// Dictionary of known file types.
+    /// </summary>
     public class FilePickerFileTypes
     {
         public static FilePickerFileType All { get; } = new FilePickerFileType("All")
@@ -12,28 +15,28 @@ namespace Avalonia.Storage
         public static FilePickerFileType TextPlain { get; } = new FilePickerFileType("Plain Text")
         {
             Extensions = new[] { "txt" },
-            // AppleUniformTypeIdentifiers = new[] { },
+            AppleUniformTypeIdentifiers = new[] { "public.plain-text" },
             MimeTypes = new[] { "text/plain" }
         };
 
         public static FilePickerFileType ImageAll { get; } = new FilePickerFileType("All Images")
         {
             Extensions = new[] { "png", "jpg", "jpeg", "gif", "bmp" },
-            // AppleUniformTypeIdentifiers = new[] { },
+            AppleUniformTypeIdentifiers = new[] { "public.image" },
             MimeTypes = new[] { "image/*" }
         };
 
         public static FilePickerFileType ImageJpg { get; } = new FilePickerFileType("JPEG image")
         {
             Extensions = new[] { "jpg", "jpeg" },
-            // AppleUniformTypeIdentifiers = new[] { },
+            AppleUniformTypeIdentifiers = new[] { "public.jpeg" },
             MimeTypes = new[] { "image/jpeg" }
         };
 
         public static FilePickerFileType ImagePng { get; } = new FilePickerFileType("PNG image")
         {
             Extensions = new[] { "png" },
-            // AppleUniformTypeIdentifiers = new[] { },
+            AppleUniformTypeIdentifiers = new[] { "public.png" },
             MimeTypes = new[] { "image/png" }
         };
 
