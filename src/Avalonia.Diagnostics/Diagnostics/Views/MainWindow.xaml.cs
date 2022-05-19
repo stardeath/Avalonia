@@ -11,7 +11,6 @@ using Avalonia.Input;
 using Avalonia.Input.Raw;
 using Avalonia.Markup.Xaml;
 using Avalonia.Styling;
-using Avalonia.Themes.Default;
 using Avalonia.VisualTree;
 
 namespace Avalonia.Diagnostics.Views
@@ -251,13 +250,9 @@ namespace Avalonia.Diagnostics.Views
         public void SetOptions(DevToolsOptions options)
         {
             (DataContext as MainViewModel)?.SetOptions(options);
-
-            if (options.UseDarkMode)
+            if (options.Theme is { } theme)
             {
-                if (Styles[0] is SimpleTheme st)
-                {
-                    st.Mode = SimpleThemeMode.Dark;
-                }                
+                Theme = theme;
             }
         }
 

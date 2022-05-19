@@ -1,6 +1,8 @@
 <Style xmlns="https://github.com/avaloniaui" Selector="EmbeddableControlRoot">
   <Setter Property="Background" Value="{DynamicResource SystemControlBackgroundAltHighBrush}"/>
+  <Setter Property="Foreground" Value="{DynamicResource SystemControlForegroundBaseHighBrush}"/>
   <Setter Property="FontSize" Value="{DynamicResource ControlContentThemeFontSize}"/>
+  <Setter Property="FontFamily" Value="{DynamicResource ContentControlThemeFontFamily}" />
   <Setter Property="Template">
     <ControlTemplate>
       <Panel>

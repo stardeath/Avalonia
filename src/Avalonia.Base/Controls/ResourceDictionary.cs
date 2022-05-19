@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+
 using Avalonia.Collections;
 using Avalonia.Metadata;
 
@@ -15,6 +16,7 @@ namespace Avalonia.Controls
     {
         private IResourceHost? _owner;
         private AvaloniaList<IResourceProvider>? _mergedDictionaries;
+        private AvaloniaDictionary<ElementTheme, IResourceProvider>? _themeDictionary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceDictionary"/> class.
@@ -76,6 +78,34 @@ namespace Avalonia.Controls
             }
         }
 
+        public IDictionary<ElementTheme, IResourceProvider> ThemeDictionaries
+        {
+            get
+            {
+                if (_themeDictionary == null)
+                {
+                    _themeDictionary = new AvaloniaDictionary<ElementTheme, IResourceProvider>();
+                    _themeDictionary.ForEachItem(
+                        x =>
+                        {
+                            if (Owner is object)
+                            {
+                                x.AddOwner(Owner);
+                            }
+                        },
+                        x =>
+                        {
+                            if (Owner is object)
+                            {
+                                x.RemoveOwner(Owner);
+                            }
+                        },
+                        () => throw new NotSupportedException("Dictionary reset not supported"));
+                }
+                return _themeDictionary;
+            }
+        }
+
         bool IResourceNode.HasResources
         {
             get
@@ -123,6 +153,33 @@ namespace Avalonia.Controls
             return false;
         }
 
+        public bool TryGetResource(ElementTheme theme, object key, out object? value)
+        {
+            if (TryGetValue(key, out value))
+            {
+                return true;
+            }
+
+            if (_themeDictionary?.TryGetValue(theme, out var themeResourceProvider) == true
+                && themeResourceProvider.TryGetResource(key, out value))
+            {
+                return true;
+            }
+
+            if (_mergedDictionaries != null)
+            {
+                for (var i = _mergedDictionaries.Count - 1; i >= 0; --i)
+                {
+                    if (_mergedDictionaries[i].TryGetResource(theme, key, out value))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         void IResourceProvider.AddOwner(IResourceHost owner)
         {
             owner = owner ?? throw new ArgumentNullException(nameof(owner));
@@ -139,6 +196,14 @@ namespace Avalonia.Controls
             if (_mergedDictionaries is object)
             {
                 foreach (var i in _mergedDictionaries)
+                {
+                    i.AddOwner(owner);
+                    hasResources |= i.HasResources;
+                }
+            }
+            if (_themeDictionary is object)
+            {
+                foreach (var i in _themeDictionary.Values)
                 {
                     i.AddOwner(owner);
                     hasResources |= i.HasResources;
@@ -164,6 +229,14 @@ namespace Avalonia.Controls
                 if (_mergedDictionaries is object)
                 {
                     foreach (var i in _mergedDictionaries)
+                    {
+                        i.RemoveOwner(owner);
+                        hasResources |= i.HasResources;
+                    }
+                }
+                if (_themeDictionary is object)
+                {
+                    foreach (var i in _themeDictionary.Values)
                     {
                         i.RemoveOwner(owner);
                         hasResources |= i.HasResources;

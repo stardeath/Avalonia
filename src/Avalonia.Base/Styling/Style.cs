@@ -117,6 +117,12 @@ namespace Avalonia.Styling
             return _resources?.TryGetResource(key, out result) ?? false;
         }
 
+        public bool TryGetResource(ElementTheme theme, object key, out object? result)
+        {
+            result = null;
+            return _resources?.TryGetResource(theme, key, out result) ?? false;
+        }
+
         /// <summary>
         /// Returns a string representation of the style.
         /// </summary>

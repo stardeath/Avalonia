@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
@@ -7,6 +8,7 @@ using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.Platform;
 using Avalonia.Themes.Fluent;
+
 using ControlCatalog.Models;
 using ControlCatalog.Pages;
 
@@ -41,41 +43,33 @@ namespace ControlCatalog
             {
                 if (themes.SelectedItem is CatalogTheme theme)
                 {
-                    var themeStyle = Application.Current.Styles[0];
                     if (theme == CatalogTheme.FluentLight)
                     {
-                        if (App.Fluent.Mode != FluentThemeMode.Light)
-                        {
-                            App.Fluent.Mode = FluentThemeMode.Light;
-                        }
                         Application.Current.Styles[0] = App.Fluent;
                         Application.Current.Styles[1] = App.ColorPickerFluent;
                         Application.Current.Styles[2] = App.DataGridFluent;
+                        Application.Current.Theme = ElementTheme.Light;
                     }
                     else if (theme == CatalogTheme.FluentDark)
                     {
-
-                        if (App.Fluent.Mode != FluentThemeMode.Dark)
-                        {
-                            App.Fluent.Mode = FluentThemeMode.Dark;
-                        }
                         Application.Current.Styles[0] = App.Fluent;
                         Application.Current.Styles[1] = App.ColorPickerFluent;
                         Application.Current.Styles[2] = App.DataGridFluent;
+                        Application.Current.Theme = ElementTheme.Dark;
                     }
                     else if (theme == CatalogTheme.DefaultLight)
                     {
-                        App.Default.Mode = Avalonia.Themes.Default.SimpleThemeMode.Light;
-                        Application.Current.Styles[0] = App.DefaultLight;
+                        Application.Current.Styles[0] = App.Default;
                         Application.Current.Styles[1] = App.ColorPickerDefault;
                         Application.Current.Styles[2] = App.DataGridDefault;
+                        Application.Current.Theme = ElementTheme.Light;
                     }
                     else if (theme == CatalogTheme.DefaultDark)
                     {
-                        App.Default.Mode = Avalonia.Themes.Default.SimpleThemeMode.Dark;
-                        Application.Current.Styles[0] = App.DefaultDark;
+                        Application.Current.Styles[0] = App.Default;
                         Application.Current.Styles[1] = App.ColorPickerDefault;
                         Application.Current.Styles[2] = App.DataGridDefault;
+                        Application.Current.Theme = ElementTheme.Dark;
                     }
                 }
             };

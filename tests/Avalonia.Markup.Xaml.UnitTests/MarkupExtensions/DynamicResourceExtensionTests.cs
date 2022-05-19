@@ -934,5 +934,12 @@ namespace Avalonia.Markup.Xaml.UnitTests.MarkupExtensions
             value = key;
             return true;
         }
+
+        public bool TryGetResource(ElementTheme theme, object key, out object value)
+        {
+            RequestedResources.Add(key);
+            value = key;
+            return true;
+        }
     }
 }

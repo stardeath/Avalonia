@@ -403,6 +403,13 @@ namespace Avalonia
                    (_styles?.TryGetResource(key, out value) ?? false);
         }
 
+        public bool TryGetResource(ElementTheme theme, object key, out object? value)
+        {
+            value = null;
+            return (_resources?.TryGetResource(theme, key, out value) ?? false) ||
+                   (_styles?.TryGetResource(theme, key, out value) ?? false);
+        }
+
         /// <summary>
         /// Sets the styled element's logical parent.
         /// </summary>
