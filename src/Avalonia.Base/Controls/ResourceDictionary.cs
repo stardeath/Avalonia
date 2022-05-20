@@ -160,10 +160,19 @@ namespace Avalonia.Controls
                 return true;
             }
 
-            if (_themeDictionary?.TryGetValue(theme, out var themeResourceProvider) == true
-                && themeResourceProvider.TryGetResource(key, out value))
+            if (_themeDictionary is not null)
             {
-                return true;
+                if (_themeDictionary.TryGetValue(theme, out var themeResourceProvider)
+                    && themeResourceProvider.TryGetResource(key, out value))
+                {
+                    return true;
+                }
+                if (theme.Inherit is {} themeInherit
+                    && _themeDictionary.TryGetValue(themeInherit, out themeResourceProvider)
+                    && themeResourceProvider.TryGetResource(key, out value))
+                {
+                    return true;
+                }
             }
 
             if (_mergedDictionaries != null)

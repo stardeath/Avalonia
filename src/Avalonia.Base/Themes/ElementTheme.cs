@@ -10,12 +10,20 @@ namespace Avalonia
         {
             Key = key ?? throw new ArgumentNullException(nameof(key));
         }
+        
+        public ElementTheme(object key, ElementTheme inheritTheme)
+        {
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Inherit = inheritTheme;
+        }
 
         public static ElementTheme Light { get; } = new(nameof(Light));
         public static ElementTheme Dark { get; } = new(nameof(Dark));
 
         public object Key { get; }
 
+        public ElementTheme? Inherit { get; }
+        
         public override int GetHashCode()
         {
             return Key.GetHashCode();
