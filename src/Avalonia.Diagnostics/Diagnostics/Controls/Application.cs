@@ -6,7 +6,7 @@ using App = Avalonia.Application;
 namespace Avalonia.Diagnostics.Controls
 {
     class Application : AvaloniaObject
-       , Input.ICloseable
+       , Input.ICloseable, IDisposable
 
     {
         private readonly App _application;
@@ -14,6 +14,9 @@ namespace Avalonia.Diagnostics.Controls
             ?? Version.Parse("0.0.00");
         public event EventHandler? Closed;
 
+        public static readonly StyledProperty<ElementTheme> ThemeProperty =
+            ThemeControl.ThemeProperty.AddOwner<Application>();
+        
         public Application(App application)
         {
             _application = application;
@@ -34,6 +37,9 @@ namespace Avalonia.Diagnostics.Controls
                 Lifetimes.ISingleViewApplicationLifetime single => (single.MainView as VisualTree.IVisual)?.VisualRoot?.Renderer,
                 _ => null
             };
+
+            Theme = application.Theme;
+            _application.ThemeChanged += ApplicationOnThemeChanged;
         }
 
         internal App Instance => _application;
@@ -115,5 +121,32 @@ namespace Avalonia.Diagnostics.Controls
         /// Gets the root of the visual tree, if the control is attached to a visual tree.
         /// </summary>
         internal Rendering.IRenderer? RendererRoot { get; }
+        
+        /// <inheritdoc cref="Avalonia.Application.Theme" />
+        public ElementTheme Theme
+        {
+            get => GetValue(ThemeProperty);
+            set => SetValue(ThemeProperty, value);
+        }
+
+        public void Dispose()
+        {
+            _application.ThemeChanged -= ApplicationOnThemeChanged;
+        }
+
+        protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+        {
+            base.OnPropertyChanged(change);
+
+            if (change.Property == ThemeProperty)
+            {
+                _application.Theme = change.GetNewValue<ElementTheme>();
+            }
+        }
+        
+        private void ApplicationOnThemeChanged(object? sender, EventArgs e)
+        {
+            Theme = _application.Theme;
+        }
     }
 }

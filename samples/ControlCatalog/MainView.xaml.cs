@@ -38,38 +38,31 @@ namespace ControlCatalog
 
             }
 
-            var themes = this.Find<ComboBox>("Themes");
+            var modes = this.Find<ComboBox>("ThemeModes")!;
+            modes.SelectionChanged += (sender, e) =>
+            {
+                if (modes.SelectedItem is ElementTheme theme)
+                {
+                    Application.Current!.Theme = theme;
+                }
+            };
+            
+            var themes = this.Find<ComboBox>("Themes")!;
             themes.SelectionChanged += (sender, e) =>
             {
                 if (themes.SelectedItem is CatalogTheme theme)
                 {
-                    if (theme == CatalogTheme.FluentLight)
+                    if (theme == CatalogTheme.Fluent)
                     {
-                        Application.Current.Styles[0] = App.Fluent;
+                        Application.Current!.Styles[0] = App.Fluent;
                         Application.Current.Styles[1] = App.ColorPickerFluent;
                         Application.Current.Styles[2] = App.DataGridFluent;
-                        Application.Current.Theme = ElementTheme.Light;
                     }
-                    else if (theme == CatalogTheme.FluentDark)
+                    else if (theme == CatalogTheme.Default)
                     {
-                        Application.Current.Styles[0] = App.Fluent;
-                        Application.Current.Styles[1] = App.ColorPickerFluent;
-                        Application.Current.Styles[2] = App.DataGridFluent;
-                        Application.Current.Theme = ElementTheme.Dark;
-                    }
-                    else if (theme == CatalogTheme.DefaultLight)
-                    {
-                        Application.Current.Styles[0] = App.Default;
+                        Application.Current!.Styles[0] = App.Default;
                         Application.Current.Styles[1] = App.ColorPickerDefault;
                         Application.Current.Styles[2] = App.DataGridDefault;
-                        Application.Current.Theme = ElementTheme.Light;
-                    }
-                    else if (theme == CatalogTheme.DefaultDark)
-                    {
-                        Application.Current.Styles[0] = App.Default;
-                        Application.Current.Styles[1] = App.ColorPickerDefault;
-                        Application.Current.Styles[2] = App.DataGridDefault;
-                        Application.Current.Theme = ElementTheme.Dark;
                     }
                 }
             };

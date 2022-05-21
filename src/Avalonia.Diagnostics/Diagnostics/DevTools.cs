@@ -59,6 +59,7 @@ namespace Avalonia.Diagnostics
             if (window.Root is Controls.Application host)
             {
                 s_open.Remove(host.Instance);
+                host.Dispose();
             }
             else
             {

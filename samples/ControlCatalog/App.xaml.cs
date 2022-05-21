@@ -2,6 +2,7 @@ using System;
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Markup.Xaml.MarkupExtensions;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.Styling;
 using Avalonia.Themes.Default;
@@ -39,7 +40,17 @@ namespace ControlCatalog
 
         public static FluentTheme Fluent = new FluentTheme(new Uri("avares://ControlCatalog/Styles"));
 
-        public static SimpleTheme Default = new SimpleTheme(new Uri("avares://ControlCatalog/Styles"));
+        public static DefaultTheme Default = new DefaultTheme
+        {
+            Resources =
+            {
+                MergedDictionaries =
+                {
+                    // We use some accent colors from Fluent theme in Control Catalog, so it should be included for default theme too.
+                    new ResourceInclude() { Source = new Uri("avares://Avalonia.Themes.Fluent/Accents/AccentColors.xaml")}
+                }
+            }
+        };
 
         public override void Initialize()
         {

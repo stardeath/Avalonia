@@ -13,9 +13,6 @@
       </Style>
     </Grid.Styles>
     <controls:HamburgerMenu Name="Sidebar">
-      <TabItem Header="Theme">
-        <pages:ThemePage />
-      </TabItem>
       <TabItem Header="Acrylic">
         <pages:AcrylicPage />
       </TabItem>
@@ -145,6 +142,9 @@
       <TabItem Header="TextBlock">
         <pages:TextBlockPage />
       </TabItem>
+      <TabItem Header="Theme">
+        <pages:ThemePage />
+      </TabItem>
       <TabItem Header="ToggleSwitch">
         <pages:ToggleSwitchPage />
       </TabItem>
@@ -175,14 +175,20 @@
                 <SystemDecorations>Full</SystemDecorations>
               </ComboBox.Items>
             </ComboBox>
+            <ComboBox x:Name="ThemeModes"
+                      HorizontalAlignment="Stretch"
+                      SelectedIndex="0">
+              <ComboBox.Items>
+                <ElementTheme>Light</ElementTheme>
+                <ElementTheme>Dark</ElementTheme>
+              </ComboBox.Items>
+            </ComboBox>
             <ComboBox x:Name="Themes"
                       HorizontalAlignment="Stretch"
                       SelectedIndex="0">
               <ComboBox.Items>
-                <models:CatalogTheme>FluentLight</models:CatalogTheme>
-                <models:CatalogTheme>FluentDark</models:CatalogTheme>
-                <models:CatalogTheme>DefaultLight</models:CatalogTheme>
-                <models:CatalogTheme>DefaultDark</models:CatalogTheme>
+                <models:CatalogTheme>Fluent</models:CatalogTheme>
+                <models:CatalogTheme>Default</models:CatalogTheme>
               </ComboBox.Items>
             </ComboBox>
             <ComboBox x:Name="TransparencyLevels"
