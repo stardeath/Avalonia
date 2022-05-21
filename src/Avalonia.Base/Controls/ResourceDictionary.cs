@@ -167,7 +167,7 @@ namespace Avalonia.Controls
                 {
                     return true;
                 }
-                if (theme.Inherit is {} themeInherit
+                if (theme.InheritTheme is {} themeInherit
                     && _themeDictionary.TryGetValue(themeInherit, out themeResourceProvider)
                     && themeResourceProvider.TryGetResource(key, out value))
                 {

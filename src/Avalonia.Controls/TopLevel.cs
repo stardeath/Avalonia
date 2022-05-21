@@ -187,6 +187,7 @@ namespace Avalonia.Controls
             }
             if (_applicationThemeHost is { })
             {
+                Theme = _applicationThemeHost.Theme;
                 _applicationThemeHost.ThemeChanged += GlobalThemeChanged;
             }
 

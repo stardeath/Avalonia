@@ -2,22 +2,20 @@
 
 using Avalonia.Controls;
 
-#nullable enable
+namespace Avalonia;
 
-namespace Avalonia
+/// <summary>
+/// Interface for elements that supports dynamic theme.
+/// </summary>
+public interface IThemeStyleable : IResourceHost
 {
-    public interface IThemeStyleable : IResourceHost
-    {
-        /// <summary>
-        /// Element theme. Inherits value from the parent.
-        /// </summary>
-        ElementTheme Theme { get; }
+    /// <summary>
+    /// Gets the UI theme that is used by the control (and its child elements) for resource determination.
+    /// </summary>
+    ElementTheme Theme { get; }
 
-        event EventHandler? ThemeChanged;
-    }
-
-    public interface IApplicationThemeHost : IThemeStyleable
-    {
-
-    }
+    /// <summary>
+    /// Raised when the theme is changed on the element or an ancestor of the element.
+    /// </summary>
+    event EventHandler? ThemeChanged;
 }
