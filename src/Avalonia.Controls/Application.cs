@@ -210,18 +210,11 @@ namespace Avalonia
         public virtual void Initialize() { }
 
         /// <inheritdoc/>
-        bool IResourceNode.TryGetResource(object key, out object? value)
+        public bool TryGetResource(object key, ElementTheme? theme, out object? value)
         {
             value = null;
-            return (_resources?.TryGetResource(key, out value) ?? false) ||
-                   Styles.TryGetResource(key, out value);
-        }
-
-        public bool TryGetResource(ElementTheme theme, object key, out object? value)
-        {
-            value = null;
-            return (_resources?.TryGetResource(theme, key, out value) ?? false) ||
-                   Styles.TryGetResource(theme, key, out value);
+            return (_resources?.TryGetResource(key, theme, out value) ?? false) ||
+                   Styles.TryGetResource(key, theme, out value);
         }
 
         void IResourceHost.NotifyHostedResourcesChanged(ResourcesChangedEventArgs e)

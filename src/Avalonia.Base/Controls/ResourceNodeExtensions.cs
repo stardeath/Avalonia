@@ -1,5 +1,4 @@
 ﻿using System;
-using Avalonia.LogicalTree;
 using Avalonia.Reactive;
 
 #nullable enable
@@ -39,38 +38,51 @@ namespace Avalonia.Controls
             control = control ?? throw new ArgumentNullException(nameof(control));
             key = key ?? throw new ArgumentNullException(nameof(key));
 
-            IResourceNode? current = control;
+            var theme = AvaloniaLocator.Current.GetService<IApplicationThemeHost>()?.Theme;
 
-            while (current != null)
-            {
-                if (current.TryGetResource(key, out value))
-                {
-                    return true;
-                }
-
-                current = (current as IStyledElement)?.StylingParent as IResourceNode;
-            }
-
-            value = null;
-            return false;
+            return control.TryFindResource(key, theme, out value);
         }
 
-        public static bool TryFindThemeResource(this IResourceHost control, ElementTheme theme, object key, out object? value)
+        /// <summary>
+        /// Finds the specified resource by searching up the logical tree and then global styles.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="theme">Theme used to select theme dictionary.</param>
+        /// <param name="key">The resource key.</param>
+        /// <returns>The resource, or <see cref="AvaloniaProperty.UnsetValue"/> if not found.</returns>
+        public static object? FindResource(this IResourceHost control, ElementTheme? theme, object key)
         {
             control = control ?? throw new ArgumentNullException(nameof(control));
-            theme = theme ?? throw new ArgumentNullException(nameof(theme));
+            key = key ?? throw new ArgumentNullException(nameof(key));
+
+            if (control.TryFindResource(key, theme, out var value))
+            {
+                return value;
+            }
+
+            return AvaloniaProperty.UnsetValue;
+        }
+        
+        /// <summary>
+        /// Tries to the specified resource by searching up the logical tree and then global styles.
+        /// </summary>
+        /// <param name="control">The control.</param>
+        /// <param name="key">The resource key.</param>
+        /// <param name="theme">Theme used to select theme dictionary.</param>
+        /// <param name="value">On return, contains the resource if found, otherwise null.</param>
+        /// <returns>True if the resource was found; otherwise false.</returns>
+        public static bool TryFindResource(this IResourceHost control, object key, ElementTheme? theme, out object? value)
+        {
+            control = control ?? throw new ArgumentNullException(nameof(control));
             key = key ?? throw new ArgumentNullException(nameof(key));
 
             IResourceHost? current = control;
 
             while (current != null)
             {
-                if (current is IResourceHost host)
+                if (current.TryGetResource(key, theme, out value))
                 {
-                    if (host.TryGetResource(theme, key, out value))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
 
                 current = (current as IStyledElement)?.StylingParent as IResourceHost;
@@ -78,6 +90,17 @@ namespace Avalonia.Controls
 
             value = null;
             return false;
+        }
+        
+        /// <inheritdoc cref="IResourceHost.TryGetResource" />
+        public static bool TryGetResource(this IResourceHost control, object key, out object? value)
+        {
+            control = control ?? throw new ArgumentNullException(nameof(control));
+            key = key ?? throw new ArgumentNullException(nameof(key));
+
+            var theme = AvaloniaLocator.Current.GetService<IApplicationThemeHost>()?.Theme;
+            
+            return control.TryGetResource(key, theme, out value);
         }
 
         public static IObservable<object?> GetResourceObservable(
@@ -151,8 +174,7 @@ namespace Avalonia.Controls
             private object? GetValue()
             {
                 if (!(_target is IThemeStyleable themeStyleable)
-                    || themeStyleable.Theme is null
-                    || !themeStyleable.TryFindThemeResource(themeStyleable.Theme, _key, out var value))
+                    || !themeStyleable.TryFindResource(_key, themeStyleable.Theme, out var value))
                 {
                     value = _target.FindResource(_key) ?? AvaloniaProperty.UnsetValue;
                 }
@@ -242,7 +264,7 @@ namespace Avalonia.Controls
             {
                 if (!(_target.Owner is IThemeStyleable themeStyleable)
                     || themeStyleable.Theme is null
-                    || !themeStyleable.TryFindThemeResource(themeStyleable.Theme, _key, out var value))
+                    || !themeStyleable.TryFindResource(_key, themeStyleable.Theme, out var value))
                 {
                     value = _target.Owner?.FindResource(_key) ?? AvaloniaProperty.UnsetValue;
                 }

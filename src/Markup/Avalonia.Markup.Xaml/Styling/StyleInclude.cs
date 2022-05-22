@@ -84,22 +84,11 @@ namespace Avalonia.Markup.Xaml.Styling
 
         public SelectorMatchResult TryAttach(IStyleable target, IStyleHost? host) => Loaded.TryAttach(target, host);
 
-        public bool TryGetResource(object key, out object? value)
+        public bool TryGetResource(object key, ElementTheme? theme, out object? value)
         {
             if (!_isLoading)
             {
-                return Loaded.TryGetResource(key, out value);
-            }
-
-            value = null;
-            return false;
-        }
-
-        public bool TryGetResource(ElementTheme theme, object key, out object? value)
-        {
-            if (!_isLoading && Loaded is IResourceProvider p)
-            {
-                return p.TryGetResource(theme, key, out value);
+                return Loaded.TryGetResource(key, theme, out value);
             }
 
             value = null;

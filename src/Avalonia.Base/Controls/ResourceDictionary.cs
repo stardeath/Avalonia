@@ -132,44 +132,24 @@ namespace Avalonia.Controls
 
         public event EventHandler? OwnerChanged;
 
-        public bool TryGetResource(object key, out object? value)
+        /// <inheritdoc/>
+        public bool TryGetResource(object key, ElementTheme? theme, out object? value)
         {
             if (TryGetValue(key, out value))
             {
                 return true;
             }
 
-            if (_mergedDictionaries != null)
-            {
-                for (var i = _mergedDictionaries.Count - 1; i >= 0; --i)
-                {
-                    if (_mergedDictionaries[i].TryGetResource(key, out value))
-                    {
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public bool TryGetResource(ElementTheme theme, object key, out object? value)
-        {
-            if (TryGetValue(key, out value))
-            {
-                return true;
-            }
-
-            if (_themeDictionary is not null)
+            if (_themeDictionary is not null && theme is not null)
             {
                 if (_themeDictionary.TryGetValue(theme, out var themeResourceProvider)
-                    && themeResourceProvider.TryGetResource(key, out value))
+                    && themeResourceProvider.TryGetResource(key, theme, out value))
                 {
                     return true;
                 }
                 if (theme.InheritTheme is {} themeInherit
                     && _themeDictionary.TryGetValue(themeInherit, out themeResourceProvider)
-                    && themeResourceProvider.TryGetResource(key, out value))
+                    && themeResourceProvider.TryGetResource(key, theme, out value))
                 {
                     return true;
                 }
@@ -179,7 +159,7 @@ namespace Avalonia.Controls
             {
                 for (var i = _mergedDictionaries.Count - 1; i >= 0; --i)
                 {
-                    if (_mergedDictionaries[i].TryGetResource(theme, key, out value))
+                    if (_mergedDictionaries[i].TryGetResource(key, theme, out value))
                     {
                         return true;
                     }

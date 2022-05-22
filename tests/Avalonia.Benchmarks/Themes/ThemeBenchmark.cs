@@ -30,14 +30,14 @@ namespace Avalonia.Benchmarks.Themes
         public bool InitFluentTheme()
         {
             UnitTestApplication.Current.Styles[0] = new FluentTheme(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"));
-            return ((IResourceHost)UnitTestApplication.Current).TryGetResource(ElementTheme.Dark, "SystemAccentColor", out _);
+            return ((IResourceHost)UnitTestApplication.Current).TryGetResource("SystemAccentColor", ElementTheme.Dark, out _);
         }
 
         [Benchmark]
         public bool InitDefaultTheme()
         {
             UnitTestApplication.Current.Styles[0] = new SimpleTheme(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"));
-            return ((IResourceHost)UnitTestApplication.Current).TryGetResource(ElementTheme.Dark, "ThemeAccentColor", out _);
+            return ((IResourceHost)UnitTestApplication.Current).TryGetResource("ThemeAccentColor", ElementTheme.Dark, out _);
         }
 
         public void Dispose()

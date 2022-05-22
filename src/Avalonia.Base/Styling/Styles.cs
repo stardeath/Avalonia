@@ -151,35 +151,16 @@ namespace Avalonia.Styling
         }
 
         /// <inheritdoc/>
-        public bool TryGetResource(object key, out object? value)
+        public bool TryGetResource(object key, ElementTheme? theme, out object? value)
         {
-            if (_resources != null && _resources.TryGetResource(key, out value))
+            if (_resources != null && _resources.TryGetResource(key, theme, out value))
             {
                 return true;
             }
 
             for (var i = Count - 1; i >= 0; --i)
             {
-                if (this[i].TryGetResource(key, out value))
-                {
-                    return true;
-                }
-            }
-
-            value = null;
-            return false;
-        }
-
-        public bool TryGetResource(ElementTheme theme, object key, out object? value)
-        {
-            if (_resources != null && _resources.TryGetResource(theme, key, out value))
-            {
-                return true;
-            }
-
-            for (var i = Count - 1; i >= 0; --i)
-            {
-                if (this[i] is IResourceProvider p && p.TryGetResource(theme, key, out value))
+                if (this[i] is IResourceProvider p && p.TryGetResource(key, theme, out value))
                 {
                     return true;
                 }

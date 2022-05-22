@@ -46,11 +46,7 @@ namespace Avalonia.Markup.Xaml.MarkupExtensions
             {
                 if (parent is IResourceNode node)
                 {
-                    if (appTheme is not null && node.TryGetResource(appTheme, ResourceKey, out var value))
-                    {
-                        return ColorToBrushConverter.Convert(value, targetType);
-                    }
-                    if (node.TryGetResource(ResourceKey, out value))
+                    if (node.TryGetResource(ResourceKey, appTheme, out var value))
                     {
                         return ColorToBrushConverter.Convert(value, targetType);
                     }

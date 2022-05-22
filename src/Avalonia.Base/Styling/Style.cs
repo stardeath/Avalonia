@@ -110,17 +110,12 @@ namespace Avalonia.Styling
 
             return match.Result;
         }
-
-        public bool TryGetResource(object key, out object? result)
+        
+        /// <inheritdoc/>
+        public bool TryGetResource(object key, ElementTheme? theme, out object? result)
         {
             result = null;
-            return _resources?.TryGetResource(key, out result) ?? false;
-        }
-
-        public bool TryGetResource(ElementTheme theme, object key, out object? result)
-        {
-            result = null;
-            return _resources?.TryGetResource(theme, key, out result) ?? false;
+            return _resources?.TryGetResource(key, theme, out result) ?? false;
         }
 
         /// <summary>

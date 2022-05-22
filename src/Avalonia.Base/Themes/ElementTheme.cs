@@ -11,7 +11,7 @@ public class ElementTheme
         Key = key ?? throw new ArgumentNullException(nameof(key));
     }
         
-    public ElementTheme(object key, ElementTheme inheritTheme)
+    public ElementTheme(object key, ElementTheme? inheritTheme)
     {
         Key = key ?? throw new ArgumentNullException(nameof(key));
         InheritTheme = inheritTheme;
