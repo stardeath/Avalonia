@@ -63,9 +63,6 @@ namespace Avalonia.Benchmarks.Themes
             return new Styles
             {
                 new Avalonia.Themes.Fluent.FluentTheme(new Uri("avares://Avalonia.Benchmarks"))
-                {
-
-                }
             };
         }
     }

@@ -72,11 +72,15 @@ namespace Avalonia.UnitTests
                 .Bind<IStyler>().ToConstant(Services.Styler)
                 .Bind<IWindowingPlatform>().ToConstant(Services.WindowingPlatform)
                 .Bind<PlatformHotkeyConfiguration>().ToSingleton<PlatformHotkeyConfiguration>();
-            var styles = Services.Theme?.Invoke();
+            var style = Services.Theme?.Invoke();
 
-            if (styles != null)
+            if (style is Styles styles)
             {
                 Styles.AddRange(styles);
+            }
+            else if (style is not null)
+            {
+                Styles.Add(style);
             }
         }
     }

@@ -4,6 +4,8 @@ using Avalonia.Controls;
 using Avalonia.Markup.Xaml.Styling;
 using Avalonia.PlatformSupport;
 using Avalonia.Styling;
+using Avalonia.Themes.Default;
+using Avalonia.Themes.Fluent;
 using Avalonia.UnitTests;
 
 using BenchmarkDotNet.Attributes;
@@ -25,34 +27,17 @@ namespace Avalonia.Benchmarks.Themes
         }
 
         [Benchmark]
-        [Arguments("avares://Avalonia.Themes.Fluent/FluentDark.xaml")]
-        [Arguments("avares://Avalonia.Themes.Fluent/FluentLight.xaml")]
-        public bool InitFluentTheme(string themeUri)
+        public bool InitFluentTheme()
         {
-            UnitTestApplication.Current.Styles[0] = new StyleInclude(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"))
-            {
-                Source = new Uri(themeUri)
-            };
-            return ((IResourceHost)UnitTestApplication.Current).TryGetResource("SystemAccentColor", out _);
+            UnitTestApplication.Current.Styles[0] = new FluentTheme(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"));
+            return ((IResourceHost)UnitTestApplication.Current).TryGetResource(ElementTheme.Dark, "SystemAccentColor", out _);
         }
 
         [Benchmark]
-        [Arguments("avares://Avalonia.Themes.Default/Accents/BaseLight.xaml")]
-        [Arguments("avares://Avalonia.Themes.Default/Accents/BaseDark.xaml")]
-        public bool InitDefaultTheme(string themeUri)
+        public bool InitDefaultTheme()
         {
-            UnitTestApplication.Current.Styles[0] = new Styles
-            {
-                new StyleInclude(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"))
-                {
-                    Source = new Uri(themeUri)
-                },
-                new StyleInclude(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"))
-                {
-                    Source = new Uri("avares://Avalonia.Themes.Default/DefaultTheme.xaml")
-                }
-            };
-            return ((IResourceHost)UnitTestApplication.Current).TryGetResource("ThemeAccentColor", out _);
+            UnitTestApplication.Current.Styles[0] = new SimpleTheme(new Uri("resm:Styles?assembly=Avalonia.Benchmarks"));
+            return ((IResourceHost)UnitTestApplication.Current).TryGetResource(ElementTheme.Dark, "ThemeAccentColor", out _);
         }
 
         public void Dispose()
