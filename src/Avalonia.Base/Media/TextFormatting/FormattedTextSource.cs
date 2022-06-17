@@ -4,7 +4,7 @@ using Avalonia.Utilities;
 
 namespace Avalonia.Media.TextFormatting
 {
-    internal readonly struct FormattedTextSource : ITextSource
+    public readonly struct FormattedTextSource : ITextSource
     {
         private readonly ReadOnlySlice<char> _text;
         private readonly TextRunProperties _defaultProperties;

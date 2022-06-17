@@ -16,7 +16,7 @@ namespace Avalonia.Utilities
     /// Unlike <see cref="Span{T}"/>, it is not a byref-like type.
     /// </summary>
     /// <typeparam name="T">The type of item contained in the slice.</typeparam>
-    internal readonly struct ArraySlice<T> : IReadOnlyList<T>
+    public readonly struct ArraySlice<T> : IReadOnlyList<T>
         where T : struct
     {
         /// <summary>

@@ -94,7 +94,7 @@ namespace Avalonia.Media.TextFormatting
             }
         }
 
-        internal void Reverse()
+        public void Reverse()
         {
             _glyphRun = null;
 
@@ -157,7 +157,7 @@ namespace Avalonia.Media.TextFormatting
             return length > 0;
         }
 
-        internal SplitResult<ShapedTextCharacters> Split(int length)
+        public SplitResult<ShapedTextCharacters> Split(int length)
         {
             if (IsReversed)
             {

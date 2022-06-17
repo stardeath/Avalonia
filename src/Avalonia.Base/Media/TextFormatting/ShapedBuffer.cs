@@ -14,7 +14,7 @@ namespace Avalonia.Media.TextFormatting
 
         }
 
-        internal ShapedBuffer(ReadOnlySlice<char> text, ArraySlice<GlyphInfo> glyphInfos, GlyphTypeface glyphTypeface, double fontRenderingEmSize, sbyte bidiLevel)
+        public ShapedBuffer(ReadOnlySlice<char> text, ArraySlice<GlyphInfo> glyphInfos, GlyphTypeface glyphTypeface, double fontRenderingEmSize, sbyte bidiLevel)
         {
             Text = text;
             GlyphInfos = glyphInfos;
@@ -103,7 +103,7 @@ namespace Avalonia.Media.TextFormatting
         /// </summary>
         /// <param name="length">The length.</param>
         /// <returns>The split result.</returns>
-        internal SplitResult<ShapedBuffer> Split(int length)
+        public SplitResult<ShapedBuffer> Split(int length)
         {
             if (Text.Length == length)
             {

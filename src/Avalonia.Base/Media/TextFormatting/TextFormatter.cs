@@ -1,4 +1,6 @@
-﻿namespace Avalonia.Media.TextFormatting
+﻿using System.Collections.Generic;
+
+namespace Avalonia.Media.TextFormatting
 {
     /// <summary>
     /// Represents a base class for text formatting.
@@ -40,5 +42,11 @@
         /// <returns>The formatted line.</returns>
         public abstract TextLine FormatLine(ITextSource textSource, int firstTextSourceIndex, double paragraphWidth,
             TextParagraphProperties paragraphProperties, TextLineBreak? previousLineBreak = null);
+
+        public abstract TextLine CreateEmptyTextLine(int firstTextSourceIndex, double paragraphWidth, TextParagraphProperties paragraphProperties);
+
+        public abstract TextLine PerformTextWrapping(List<DrawableTextRun> textRuns, int firstTextSourceIndex,
+            double paragraphWidth, TextParagraphProperties paragraphProperties, FlowDirection flowDirection,
+            TextLineBreak? currentLineBreak);
     }
 }

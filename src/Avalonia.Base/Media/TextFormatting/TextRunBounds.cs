@@ -8,7 +8,7 @@
         /// <summary>
         /// Constructing TextRunBounds
         /// </summary>
-        internal TextRunBounds(Rect bounds, int firstCharacterIndex, int length, TextRun textRun)
+        public TextRunBounds(Rect bounds, int firstCharacterIndex, int length, TextRun textRun)
         {
             Rectangle = bounds;
             TextSourceCharacterIndex = firstCharacterIndex;

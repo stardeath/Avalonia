@@ -202,7 +202,7 @@ namespace Avalonia.Media.TextFormatting
         /// <param name="textAlignment">The text alignment.</param>
         /// <param name="flowDirection">The flow direction of the line.</param>
         /// <returns>The paragraph offset.</returns>
-        internal static double GetParagraphOffsetX(double width, double widthIncludingTrailingWhitespace,
+        protected static double GetParagraphOffsetX(double width, double widthIncludingTrailingWhitespace,
             double paragraphWidth, TextAlignment textAlignment, FlowDirection flowDirection)
         {
             if (double.IsPositiveInfinity(paragraphWidth))

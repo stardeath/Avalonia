@@ -27,7 +27,7 @@ namespace Avalonia.Media.TextFormatting.Unicode
     /// as much as possible.
     /// </para>
     /// </remarks>
-    internal sealed class BidiAlgorithm
+    public sealed class BidiAlgorithm
     {
         /// <summary>
         /// The original BiDiClass classes as provided by the caller
