@@ -102,7 +102,7 @@ partial class Build : NukeBuild
                   Parameters.IsRunningOnAzure, _ => _
                 .AddProperty("JavaSdkDirectory", GetVariable<string>("JAVA_HOME_11_X64")))
             .AddProperty("PackageVersion", Parameters.Version)
-            .AddProperty("iOSRoslynPathHackRequired", true)
+            //.AddProperty("iOSRoslynPathHackRequired", true)
             .SetProcessToolPath(MsBuildExe.Value)
             .SetConfiguration(Parameters.Configuration)
             .SetVerbosity(MSBuildVerbosity.Minimal)
@@ -135,19 +135,7 @@ partial class Build : NukeBuild
                 .SetCommand("dist"));
         });
 
-    Target CompileNative => _ => _
-        .DependsOn(Clean)
-        .DependsOn(GenerateCppHeaders)
-        .OnlyWhenStatic(() => EnvironmentInfo.IsOsx)
-        .Executes(() =>
-        {
-            var project = $"{RootDirectory}/native/Avalonia.Native/src/OSX/Avalonia.Native.OSX.xcodeproj/";
-            var args = $"-project {project} -configuration {Parameters.Configuration} CONFIGURATION_BUILD_DIR={RootDirectory}/Build/Products/Release";
-            ProcessTasks.StartProcess("xcodebuild", args).AssertZeroExitCode();
-        });
-
     Target Compile => _ => _
-        .DependsOn(Clean, CompileNative)
         .DependsOn(CompileHtmlPreviewer)
         .Executes(async () =>
         {
@@ -316,6 +304,9 @@ partial class Build : NukeBuild
 
     Target Package => _ => _
         .DependsOn(RunTests)
+        .DependsOn(CreateNugetPackages);
+
+    Target PackageNoTest => _ => _
         .DependsOn(CreateNugetPackages);
 
     Target CiAzureLinux => _ => _

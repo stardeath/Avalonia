@@ -6,7 +6,6 @@ using System.Threading;
 using Avalonia;
 using Avalonia.Platform;
 using Avalonia.Threading;
-using Avalonia.X11;
 
 namespace PlatformSanityChecks
 {
@@ -19,8 +18,6 @@ namespace PlatformSanityChecks
             UiThread = Thread.CurrentThread;
             AppBuilder.Configure<App>().RuntimePlatformServicesInitializer();
             var app = new App();
-            
-            AvaloniaX11PlatformExtensions.InitializeX11Platform();
 
             CheckPlatformThreading();
         }
